@@ -1,16 +1,19 @@
 package com.dandekar.epaper.data.toimodel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class PageItem {
+public final class PageItem implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int roi;
     private int tid;
     private int toc;
     private int wc;
     private List<MetaInfo> meta;
-    private List<Object> pr = new ArrayList<Object>();
+    private transient List<Object> pr = new ArrayList<Object>();
     private Snimg snimg;
     private String cid;
     private String eap;

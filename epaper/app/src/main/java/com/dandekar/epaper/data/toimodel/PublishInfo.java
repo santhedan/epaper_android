@@ -1,6 +1,10 @@
 package com.dandekar.epaper.data.toimodel;
 
-public final class PublishInfo {
+import java.io.Serializable;
+
+public final class PublishInfo  implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String publisher;
     private String xmdVer;

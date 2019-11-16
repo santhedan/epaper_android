@@ -1,12 +1,16 @@
 package com.dandekar.epaper.data.toimodel;
 
-public final class Snimg {
+import java.io.Serializable;
+
+public final class Snimg implements Serializable {
 
     private String id;
     private String ext;
     private String kind;
     private float res;
     private String pr;
+
+    private static final long serialVersionUID = 1L;
 
     public Snimg(String id, String ext, String kind, float res, String pr) {
         this.id = id;

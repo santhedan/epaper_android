@@ -1,8 +1,11 @@
 package com.dandekar.epaper.data.toimodel;
 
+import java.io.Serializable;
 import java.util.List;
 
-public final class TOCItem {
+public final class TOCItem  implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private boolean ic;
     private boolean ip;

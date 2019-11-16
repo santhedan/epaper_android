@@ -92,8 +92,9 @@ public class PageDetailsJSONRequest extends GsonRequest<Publication> {
                       String articleURL = String.format(ApplicationCache.articleURL, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), pageItem.getId(), curSel.getRandom());
                       List<MetaInfo> metaInfo = (pageItem.getMeta() == null? new ArrayList<MetaInfo>(): pageItem.getMeta());
                       String articleSN = "";
-                      if (pageItem.getSn() != null)
+                      if (pageItem.getSn() != null) {
                           articleSN = android.text.Html.fromHtml(pageItem.getSn()).toString();
+                      }
                       Article article = new Article(pageItem.getId(), pageItem.getN(), articleSN, articleURL, metaInfo);
                       articles.add(article);
                     }

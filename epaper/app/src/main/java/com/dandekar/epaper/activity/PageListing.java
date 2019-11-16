@@ -1,7 +1,11 @@
 package com.dandekar.epaper.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -73,11 +77,23 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
         String URL = getIntent().getStringExtra(Constants.XMLURL);
         // Create the volly instance
         volley = VolleySingleton.getInstance(getApplicationContext());
-        // Create the request
-        //PageDetailsRequest request = new PageDetailsRequest(URL, ApplicationCache.cookie, this, this);
-        PageDetailsJSONRequest request = new PageDetailsJSONRequest(URL, ApplicationCache.cookie, this, this);
-        volley.getRequestQueue().add(request);
-        this.requestType = RequestType.Publication;
+        // Check if the publication object is available on disk
+        final String pubFileName = getPublicationFileName(ApplicationCache.curSel);
+        if (FileUtils.fileExists(getApplicationContext(), pubFileName)) {
+            // Read file from the disk
+            Thread t = new Thread() {
+                @Override
+                public void run() {
+                    readPubFileFromDisk(pubFileName);
+                }
+            };
+            t.start();
+        } else {
+            // Create the request
+            PageDetailsJSONRequest request = new PageDetailsJSONRequest(URL, ApplicationCache.cookie, this, this);
+            volley.getRequestQueue().add(request);
+            this.requestType = RequestType.Publication;
+        }
         //
         progressbar.setVisibility(View.VISIBLE);
     }
@@ -112,15 +128,16 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
                 };
                 t.start();
                 // Initiate save of the publication object
-                CurrentSelection curSel = ApplicationCache.curSel;
-                final String pubFileName = String.format(Constants.PublicationFileNameFormat, curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay());
-                Thread tSave = new Thread() {
-                    @Override
-                    public void run() {
-                        FileUtils.writeObjectToFile(getApplicationContext(), publication, pubFileName);
-                    }
-                };
-                tSave.start();
+                final String pubFileName = getPublicationFileName(ApplicationCache.curSel);
+                if (!FileUtils.fileExists(getApplicationContext(), pubFileName)) {
+                    Thread tSave = new Thread() {
+                        @Override
+                        public void run() {
+                            FileUtils.writeObjectToFile(getApplicationContext(), publication, pubFileName);
+                        }
+                    };
+                    tSave.start();
+                }
                 break;
             case Thumbnail:
                 final BitmapHolder holder = (BitmapHolder) response;
@@ -128,29 +145,84 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
                 this.publication.getDisplayPages().get(holder.getIntTag()).setThumbnail(holder.getBitmap());
                 adapter.notifyItemChanged(holder.getIntTag());
                 // Initiate save of bitmap data
-                CurrentSelection curSelTN = ApplicationCache.curSel;
-                final String TNFileName = String.format(Constants.ThumbnailFileNameFormat, curSelTN.getShortPath(), curSelTN.getYear(), curSelTN.getMonth(), curSelTN.getDay(), holder.getIntTag());
-                Thread tSaveTN = new Thread() {
-                    @Override
-                    public void run() {
-                        FileUtils.writeBytesToFile(getApplicationContext(), holder.getBitmapData(), TNFileName);
-                    }
-                };
-                tSaveTN.start();
+                final String TNFileName = getTNFileName(holder.getIntTag(), ApplicationCache.curSel);
+                if (!FileUtils.fileExists(getApplicationContext(), TNFileName)) {
+                    Thread tSaveTN = new Thread() {
+                        @Override
+                        public void run() {
+                            FileUtils.writeBytesToFile(getApplicationContext(), holder.getBitmapData(), TNFileName);
+                        }
+                    };
+                    tSaveTN.start();
+                }
                 break;
         }
+    }
+
+    private String getPublicationFileName(CurrentSelection curSel) {
+        return String.format(Constants.PublicationFileNameFormat, curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay());
+    }
+
+    private String getTNFileName(int pageNo, CurrentSelection curSelTN) {
+        return String.format(Constants.ThumbnailFileNameFormat, curSelTN.getShortPath(), curSelTN.getYear(), curSelTN.getMonth(), curSelTN.getDay(), pageNo);
     }
 
     private void initiateTNDownload() {
         this.requestType = RequestType.Thumbnail;
         int counter = 0;
-        for (Page page : this.publication.getDisplayPages()) {
-            Log.d(Constants.TAG, "Requesting TN -> " + page.getThumbnailURL());
-            BitmapRequest request = new BitmapRequest(page.getThumbnailURL(), counter, ApplicationCache.cookie, this, this);
-            request.setTag(REQ_TAG);
-            volley.getRequestQueue().add(request);
+        for (final Page page : this.publication.getDisplayPages()) {
+            // Check if the file exists on the disk or not
+            final String tnfile = getTNFileName(counter, ApplicationCache.curSel);
+            if (FileUtils.fileExists(getApplicationContext(), tnfile)) {
+                // Start reading of the file in different thread
+                final int pageNo = counter;
+                Thread t = new Thread() {
+                    @Override
+                    public void run() {
+                        readTNFromDisk(tnfile, pageNo);
+                    }
+                };
+                t.start();
+            } else {
+                Log.d(Constants.TAG, "Requesting TN -> " + page.getThumbnailURL());
+                BitmapRequest request = new BitmapRequest(page.getThumbnailURL(), counter, ApplicationCache.cookie, this, this);
+                request.setTag(REQ_TAG);
+                volley.getRequestQueue().add(request);
+            }
             counter++;
         }
+    }
+
+    private void readTNFromDisk(String tnFile, int pageNo) {
+        // Read the file from disk
+        byte[] thumbnailBytes = FileUtils.readBytesFromFile(getApplicationContext(), tnFile);
+        // Convert the byte array to bitmap
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inScaled = false;   // We want to get the original image not scaled image
+        Bitmap bitmap = BitmapFactory.decodeByteArray(thumbnailBytes, 0, thumbnailBytes.length, opt);
+        final BitmapHolder holder = new BitmapHolder(pageNo, null, thumbnailBytes, bitmap);
+        // Call the onReasponse from UI thread
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                requestType = RequestType.Thumbnail;
+                // Code here will run in UI thread
+                onResponse(holder);
+            }
+        });
+    }
+
+    private void readPubFileFromDisk(String pubFileName) {
+        final Publication pub = (Publication) FileUtils.readObjectFromFile(getApplicationContext(), pubFileName);
+        // Call the onReasponse from UI thread
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                // Code here will run in UI thread
+                requestType = RequestType.Publication;
+                onResponse(pub);
+            }
+        });
     }
 
     @Override

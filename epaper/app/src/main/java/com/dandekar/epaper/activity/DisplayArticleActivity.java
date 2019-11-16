@@ -1,6 +1,8 @@
 package com.dandekar.epaper.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.webkit.WebView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,10 +39,34 @@ public class DisplayArticleActivity extends AppCompatActivity implements Respons
         //
         String articleUrl = getIntent().getStringExtra(Constants.ARTICLE_URL);
         articleID = getIntent().getStringExtra(Constants.ARTICLE_ID);
-        // Create the volly instance
-        volley = VolleySingleton.getInstance(getApplicationContext());
-        GetArticleContent request = new GetArticleContent(articleUrl, this, this);
-        volley.getRequestQueue().add(request);
+        // Check if the article is available on disk
+        final String articleFileName = getArticleFileName(ApplicationCache.curSel);
+        if (FileUtils.fileExists(getApplicationContext(), articleFileName)) {
+            Thread t = new Thread() {
+                @Override
+                public void run() {
+                    readArticleFileFromDisk(articleFileName);
+                }
+            };
+            t.start();
+        } else {
+            // Create the volly instance
+            volley = VolleySingleton.getInstance(getApplicationContext());
+            GetArticleContent request = new GetArticleContent(articleUrl, this, this);
+            volley.getRequestQueue().add(request);
+        }
+    }
+
+    private void readArticleFileFromDisk(String fileName) {
+        final String articleText = FileUtils.readStringFromFile(getApplicationContext(), fileName);
+        // Call the onReasponse from UI thread
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                // Code here will run in UI thread
+                onResponse(articleText);
+            }
+        });
     }
 
     @Override
@@ -55,13 +81,18 @@ public class DisplayArticleActivity extends AppCompatActivity implements Respons
     public void onResponse(String response) {
         final StringBuilder sb = new StringBuilder();
         //<LINK href="toi.css" type="text/css" rel="stylesheet"/>
-        sb.append("<HTML><HEAD><meta name=\"viewport\" content=\"width=device-width,height=device-height,target-densityDpi=device-dpi,user-scalable=yes,initial-scale=0.5, maximum-scale=2, minimum-scale=0.5\" /></HEAD><body>");
+        sb.append("<HTML><HEAD><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />");
+        sb.append("<style>\n" +
+                ".indent {\n" +
+                "  word-wrap: break-word;\n" +
+                "}\n" +
+                "</style>");
+        sb.append("</HEAD><body>");
         sb.append(response);
         sb.append("</body></HTML>");
         wv.loadDataWithBaseURL("file:///android_asset/", sb.toString(), "text/html", "utf-8", null);
         // Initiate save of article data
-        CurrentSelection curSelTN = ApplicationCache.curSel;
-        final String articleFileName = String.format(Constants.ArticleFileNameFormat, curSelTN.getShortPath(), curSelTN.getYear(), curSelTN.getMonth(), curSelTN.getDay(), articleID);
+        final String articleFileName = getArticleFileName(ApplicationCache.curSel);
         Thread tSaveArt = new Thread() {
             @Override
             public void run() {
@@ -70,6 +101,10 @@ public class DisplayArticleActivity extends AppCompatActivity implements Respons
         };
         //
         tSaveArt.start();
+    }
+
+    private String getArticleFileName(CurrentSelection curSelTN) {
+        return String.format(Constants.ArticleFileNameFormat, curSelTN.getShortPath(), curSelTN.getYear(), curSelTN.getMonth(), curSelTN.getDay(), articleID);
     }
 
 }

@@ -2,6 +2,8 @@ package com.dandekar.epaper.util;
 
 import android.content.Context;
 
+import com.dandekar.epaper.data.toimodel.Publication;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -15,7 +17,9 @@ public final class FileUtils {
 
     public static void writeStringToFile(Context context, final String fileContents, String fileName) {
         try {
-            FileWriter out = new FileWriter(new File(context.getFilesDir(), fileName));
+            File file = new File(context.getFilesDir() + ApplicationCache.curSel.getPathToSave(), fileName);
+            file.getParentFile().mkdirs();
+            FileWriter out = new FileWriter(file);
             out.write(fileContents);
             out.close();
         } catch (IOException e) {
@@ -25,7 +29,8 @@ public final class FileUtils {
 
     public static String readStringFromFile(Context context, String fileName) {
         try {
-            FileReader reader = new FileReader(new File(context.getFilesDir(), fileName));
+            File file = new File(context.getFilesDir() + ApplicationCache.curSel.getPathToSave(), fileName);
+            FileReader reader = new FileReader(file);
             StringBuffer stringBuffer = new StringBuffer();
             int numCharsRead;
             char[] charArray = new char[1024];
@@ -40,9 +45,11 @@ public final class FileUtils {
         return "";
     }
 
-    public static void writeObjectToFile(Context context, final Object object, String fileName) {
+    public static void writeObjectToFile(Context context, final Publication object, String fileName) {
         try {
-            FileOutputStream f = new FileOutputStream(new File(context.getFilesDir(), fileName));
+            File file = new File(context.getFilesDir() + ApplicationCache.curSel.getPathToSave(), fileName);
+            file.getParentFile().mkdirs();
+            FileOutputStream f = new FileOutputStream(file);
             ObjectOutputStream o = new ObjectOutputStream(f);
             // Write objects to file
             o.writeObject(object);
@@ -56,7 +63,9 @@ public final class FileUtils {
 
     public static void writeBytesToFile(Context context, final byte[] bytes, String fileName) {
         try {
-            FileOutputStream f = new FileOutputStream(new File(context.getFilesDir(), fileName));
+            File file = new File(context.getFilesDir() + ApplicationCache.curSel.getPathToSave(), fileName);
+            file.getParentFile().mkdirs();
+            FileOutputStream f = new FileOutputStream(file);
             f.write(bytes);
             f.close();
         } catch (IOException e) {
@@ -64,12 +73,27 @@ public final class FileUtils {
         }
     }
 
-    public static Object readObjectFromFile(Context context, String fileName) {
+    public  static byte[] readBytesFromFile(Context context, String fileName) {
         try {
-            FileInputStream fi = new FileInputStream(new File(context.getFilesDir(), fileName));
+            File file = new File(context.getFilesDir() + ApplicationCache.curSel.getPathToSave(), fileName);
+            FileInputStream fi = new FileInputStream(file);
+            byte[] fileData = new byte[(int)file.length()];
+            fi.read(fileData);
+            fi.close();
+            return fileData;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Publication readObjectFromFile(Context context, String fileName) {
+        try {
+            File file = new File(context.getFilesDir() + ApplicationCache.curSel.getPathToSave(), fileName);
+            FileInputStream fi = new FileInputStream(file);
             ObjectInputStream oi = new ObjectInputStream(fi);
             // Read object
-            Object object = oi.readObject();
+            Publication object = (Publication)oi.readObject();
             oi.close();
             fi.close();
             //
@@ -80,5 +104,10 @@ public final class FileUtils {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    public static boolean fileExists(Context context, String fileName) {
+        File file = new File(context.getFilesDir() + ApplicationCache.curSel.getPathToSave(), fileName);
+        return file.exists();
     }
 }

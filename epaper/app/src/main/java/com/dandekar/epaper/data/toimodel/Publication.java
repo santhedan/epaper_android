@@ -5,6 +5,8 @@ import java.util.List;
 
 public final class Publication implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private boolean aips;
     private boolean hasFootnotes;
     private boolean rtl;
@@ -13,12 +15,12 @@ public final class Publication implements Serializable {
     private int defaultPageWidth;
     private int pagesCount;
     private int previewResolution;
-    private List <Object> page_layer_img;
-    private List<Object> meta;
-    private List<Object> page_img;
+    private transient List <Object> page_layer_img;
+    private transient List<Object> meta;
+    private transient List<Object> page_img;
     private List<Page> pages;
     private List<Section> sections;
-    private List<TOCItem> toc;
+    private transient List<TOCItem> toc;
     private PublishInfo PublishObject;
     private String date;
     private String href;

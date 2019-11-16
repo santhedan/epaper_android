@@ -2,15 +2,18 @@ package com.dandekar.epaper.data.displaymodel;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
 import java.util.List;
 
-public final class Page {
+public final class Page  implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int position;
     private String name;
     private String thumbnailURL;
     private List<Article> articles;
-    private Bitmap thumbnail;
+    private transient Bitmap thumbnail;
 
     public int getPosition() {
         return position;

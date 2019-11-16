@@ -1,8 +1,11 @@
 package com.dandekar.epaper.data.toimodel;
 
+import java.io.Serializable;
 import java.util.List;
 
-public final class Page {
+public final class Page  implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String l;
     private boolean sfr;

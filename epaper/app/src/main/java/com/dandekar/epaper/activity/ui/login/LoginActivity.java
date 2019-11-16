@@ -3,6 +3,7 @@ package com.dandekar.epaper.activity.ui.login;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private Button loginButton;
+    private Button registerButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
         loginButton = findViewById(R.id.login);
+        registerButton = findViewById(R.id.register);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
         // Create the volly instance
@@ -55,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (loginFormState == null) {
                     return;
                 }
-                loginButton.setEnabled(loginFormState.isDataValid());
+                loginButton.setEnabled(loginFormState.isDataValid() && ConnectivityHelper.isConnectedToNetwork(getApplicationContext()));
                 if (loginFormState.getUsernameError() != null) {
                     usernameEditText.setError(getString(loginFormState.getUsernameError()));
                 }
@@ -131,6 +134,16 @@ public class LoginActivity extends AppCompatActivity {
                         passwordEditText.getText().toString(), volley);
             }
         });
+        //
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "https://epaper.timesgroup.com/TOI/TimesOfIndia/Indialogin.aspx";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
     }
 
     private void saveCookie(LoginResult loginResult) {
@@ -153,9 +166,9 @@ public class LoginActivity extends AppCompatActivity {
         // Check network state and enable / disable login button
         if (!ConnectivityHelper.isConnectedToNetwork(getApplicationContext())) {
             Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG).show();
-            loginButton.setEnabled(false);
+            registerButton.setEnabled(false);
         } else {
-            loginButton.setEnabled(true);
+            registerButton.setEnabled(true);
         }
     }
 }

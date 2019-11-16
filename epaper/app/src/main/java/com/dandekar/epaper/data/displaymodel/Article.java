@@ -2,9 +2,12 @@ package com.dandekar.epaper.data.displaymodel;
 
 import com.dandekar.epaper.data.toimodel.MetaInfo;
 
+import java.io.Serializable;
 import java.util.List;
 
-public final class Article {
+public final class Article  implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String id;
     private String title;
