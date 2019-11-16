@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">ePaper</string>
+    <string name="thetimesofindia">thetimesofindia</string>
+    <string name="mirror">mirror</string>
+    <string name="theeconomictimes">theeconomictimes</string>
+    <string name="selectpublication">Select Publication</string>
+    <string name="selectedition">Select Edition</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password can not be empty</string>
+    <string name="login_failed">Login failed</string>
+    <string name="no_internet">No internet connectivity</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="no_article_message">No article on page</string>
+    <string name="help_message">Click on page thumbnail to view article list</string>
+</resources>
