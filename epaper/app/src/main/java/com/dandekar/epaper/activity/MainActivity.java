@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(R.string.selectpublication);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_publication_list);
     }
 
     public void launch_toi_home(View view) {

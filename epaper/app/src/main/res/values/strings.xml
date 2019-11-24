@@ -20,4 +20,6 @@
     <string name="help_message">Click on page thumbnail to view article list</string>
     <string name="register">Register</string>
     <string name="message">Please enter your credentials to access ePaper. Click REGISTER to create new account.</string>
+    <string name="delete_content">Delete Content</string>
+    <string name="sign_out">Sign Out</string>
 </resources>

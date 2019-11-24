@@ -1,5 +1,6 @@
 package com.dandekar.epaper.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dandekar.epaper.R;
+import com.dandekar.epaper.data.Constants;
 import com.dandekar.epaper.data.displaymodel.Page;
 import com.dandekar.epaper.holder.PageNameHolder;
 import com.dandekar.epaper.holder.ThumbnailHolder;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PageThumbnailAdapter extends RecyclerView.Adapter {
 
@@ -22,9 +26,12 @@ public class PageThumbnailAdapter extends RecyclerView.Adapter {
     private View.OnClickListener listener;
     private static final String pageNameFormat = "%s (%d)";
 
+    Map<String, String> itemsDisplayed;
+
     public PageThumbnailAdapter(List<Page> pages, View.OnClickListener listener) {
         this.pages = pages;
         this.listener = listener;
+        this.itemsDisplayed = new ConcurrentHashMap<>();
     }
 
     @NonNull
@@ -51,16 +58,31 @@ public class PageThumbnailAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PageNameHolder) {
+            String existingTag = (String) ((PageNameHolder)holder).pageNameLayout.getTag();
+            if (existingTag != null) {
+                this.itemsDisplayed.remove(existingTag);
+            }
+            Log.d(Constants.TAG, "The existing tag is : " + existingTag);
             ((PageNameHolder)holder).pageName.setText(pages.get(position).getName());
-            ((PageNameHolder)holder).pageNameLayout.setTag(PAGE + position);
+            String newTag = PAGE + position;
+            this.itemsDisplayed.put(newTag, newTag);
+            ((PageNameHolder)holder).pageNameLayout.setTag(newTag);
             ((PageNameHolder)holder).pageNameLayout.setOnClickListener(listener);
         } else if (holder instanceof ThumbnailHolder) {
+            String existingTag = (String) ((ThumbnailHolder)holder).pageThumbnail.getTag();
+            if (existingTag != null) {
+                this.itemsDisplayed.remove(existingTag);
+            }
+            Log.d(Constants.TAG, "The existing tag is : " + existingTag);
             ((ThumbnailHolder)holder).pageThumbnail.setImageBitmap(pages.get(position).getThumbnail());
-            ((ThumbnailHolder)holder).pageThumbnail.setTag(PAGE + position);
+            String newTag = PAGE + position;
+            this.itemsDisplayed.put(newTag, newTag);
+            ((ThumbnailHolder)holder).pageThumbnail.setTag(newTag);
             String pageName = String.format(pageNameFormat, pages.get(position).getName(), position+1);
             ((ThumbnailHolder)holder).pageName.setText(pageName);
             ((ThumbnailHolder)holder).pageThumbnail.setOnClickListener(listener);
         }
+        Log.d(Constants.TAG, this.itemsDisplayed.toString());
     }
 
     @Override

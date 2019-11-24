@@ -51,4 +51,5 @@ public class ArticleAdapter extends RecyclerView.Adapter {
         }
         return 0;
     }
+
 }
