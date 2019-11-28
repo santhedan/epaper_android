@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/lightGray"/>
+    <size android:height="@dimen/cell_divider_height"/>
+</shape>

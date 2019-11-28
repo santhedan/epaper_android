@@ -25,6 +25,8 @@ import com.dandekar.epaper.data.CurrentSelection;
 import com.dandekar.epaper.data.displaymodel.Article;
 import com.dandekar.epaper.data.displaymodel.Page;
 import com.dandekar.epaper.data.toimodel.Publication;
+import com.dandekar.epaper.divider.GrayDividerDecoration;
+import com.dandekar.epaper.divider.GrayVerticalDividerDecoration;
 import com.dandekar.epaper.request.BitmapRequest;
 import com.dandekar.epaper.request.PageDetailsJSONRequest;
 import com.dandekar.epaper.util.ApplicationCache;
@@ -67,6 +69,10 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
         //
         recyclerView = findViewById(R.id.pageThumbnails);
         articleRecyclerView = findViewById(R.id.pageArticles);
+        //
+        recyclerView.addItemDecoration(new GrayVerticalDividerDecoration(getResources()));
+        articleRecyclerView.addItemDecoration(new GrayDividerDecoration(getResources()));
+        //
         messageText = findViewById(R.id.messageText);
         //
         setTitle(String.format(titleFormat, ApplicationCache.publication.toString(), ApplicationCache.edition.toString()));

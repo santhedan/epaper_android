@@ -8,6 +8,8 @@ public final class ApplicationCache {
 
     public static String cookie = "";
 
+    public static String userName = "";
+
     public static Publication publication;
 
     public static Edition edition;

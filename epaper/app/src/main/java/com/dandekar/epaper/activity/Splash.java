@@ -40,8 +40,10 @@ public class Splash extends AppCompatActivity {
         pauseApp();
         Log.d(Constants.TAG,"Cookie ->" + cookie);
         if (!cookie.isEmpty()) {
+            String userName = pref.getString(Constants.USERNAME_KEY, "");
             // Set the cookie in the app cache
             ApplicationCache.cookie = cookie;
+            ApplicationCache.userName = userName;
             // Start the application with main activity
             clazz = MainActivity.class;
         } else {

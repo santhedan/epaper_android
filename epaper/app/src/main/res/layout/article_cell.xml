@@ -33,9 +33,4 @@
         android:maxLines="3"
         android:ellipsize="end" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/article_cell_divider_height"
-        android:background="@android:color/black" />
-
 </LinearLayout>

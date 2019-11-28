@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                     Thread t = new Thread() {
                         @Override
                         public void run() {
-                            saveCookie(loginResult);
+                            saveCookie(loginResult, usernameEditText.getText().toString());
                         }
                     };
                     t.start();
@@ -146,12 +146,14 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void saveCookie(LoginResult loginResult) {
+    private void saveCookie(LoginResult loginResult, String userName) {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF_NAME, MODE_PRIVATE); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
         String value = loginResult.getSuccess().getPlenigoUser() + "; " + loginResult.getSuccess().getToiAuth() + loginResult.getSuccess().getToiPlenigoId();
         Log.d(Constants.TAG, "Storing cookie -> " + value);
         editor.putString(Constants.COOKIE_KEY, value);
+        Log.d(Constants.TAG, "Storing username -> " + userName);
+        editor.putString(Constants.USERNAME_KEY, userName);
         ApplicationCache.cookie = value;
         editor.commit();
     }

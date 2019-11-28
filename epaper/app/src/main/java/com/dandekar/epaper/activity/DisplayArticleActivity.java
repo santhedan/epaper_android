@@ -3,7 +3,9 @@ package com.dandekar.epaper.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.webkit.WebView;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,11 +24,15 @@ public class DisplayArticleActivity extends AppCompatActivity implements Respons
     private VolleySingleton volley;
     private WebView wv;
     private String articleID;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_article);
+        //
+        progressBar = findViewById(R.id.progressbar);
+        progressBar.setVisibility(View.VISIBLE);
         //
         wv = findViewById(R.id.articleWebView);
         wv.getSettings().setLoadWithOverviewMode(true);
@@ -75,6 +81,8 @@ public class DisplayArticleActivity extends AppCompatActivity implements Respons
         sb.append("<HTML><HEAD></HEAD><body>");
         sb.append("<h1>Error loading article</h1>");
         sb.append("</body></HTML>");
+        wv.loadData(sb.toString(), "text/html", "UTF-8");
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -91,6 +99,7 @@ public class DisplayArticleActivity extends AppCompatActivity implements Respons
         sb.append(response);
         sb.append("</body></HTML>");
         wv.loadDataWithBaseURL("file:///android_asset/", sb.toString(), "text/html", "utf-8", null);
+        progressBar.setVisibility(View.GONE);
         // Initiate save of article data
         final String articleFileName = getArticleFileName(ApplicationCache.curSel);
         Thread tSaveArt = new Thread() {

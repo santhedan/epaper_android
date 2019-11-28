@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dandekar.epaper.R;
 import com.dandekar.epaper.data.Constants;
+import com.dandekar.epaper.data.Publication;
 import com.dandekar.epaper.data.displaymodel.Page;
 import com.dandekar.epaper.holder.PageNameHolder;
 import com.dandekar.epaper.holder.ThumbnailHolder;
+import com.dandekar.epaper.util.ApplicationCache;
 
 import java.util.List;
 import java.util.Map;
@@ -46,9 +48,15 @@ public class PageThumbnailAdapter extends RecyclerView.Adapter {
             }
                 break;
             case 2: {
-                LinearLayout layout = (LinearLayout) LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.page_thumbnail_cell, parent, false);
-                holder = new ThumbnailHolder(layout);
+                if (ApplicationCache.publication == Publication.Mirror) {
+                    LinearLayout layout = (LinearLayout) LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.mirror_page_thumbnail_cell, parent, false);
+                    holder = new ThumbnailHolder(layout);
+                } else {
+                    LinearLayout layout = (LinearLayout) LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.page_thumbnail_cell, parent, false);
+                    holder = new ThumbnailHolder(layout);
+                }
             }
                 break;
         }

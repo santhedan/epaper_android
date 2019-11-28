@@ -6,6 +6,7 @@ public abstract class Constants {
     public static final String XMLURL = "XMLURL";
     public static final String SHARED_PREF_NAME = "CookiePref";
     public static final String COOKIE_KEY = "Cookie";
+    public static final String USERNAME_KEY = "Username";
     //https://epaper.timesgroup.com/Olive/ODN/TimesOfIndia/get/TOIM-2019-09-27/prxml.ashx?kind=doc&href=TOIM%2F2019%2F09%2F27&snippets=true&ts=20190927003412
     public  static final String getXMLURL = "https://epaper.timesgroup.com/Olive/ODN/%s/get/%s-%d-%02d-%02d/prxml.ashx?kind=doc&href=%s/%d/%02d/%02d&snippets=true&ts=%d%02d%02d%d";
     public static final String ARTICLE_URL = "ARTICLE_URL";
