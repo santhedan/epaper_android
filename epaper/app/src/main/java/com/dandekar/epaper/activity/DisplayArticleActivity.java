@@ -3,10 +3,12 @@ package com.dandekar.epaper.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Response;
@@ -25,6 +27,7 @@ public class DisplayArticleActivity extends AppCompatActivity implements Respons
     private WebView wv;
     private String articleID;
     private ProgressBar progressBar;
+    private String titleFormat = "%s - %s";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,9 @@ public class DisplayArticleActivity extends AppCompatActivity implements Respons
         //
         String articleUrl = getIntent().getStringExtra(Constants.ARTICLE_URL);
         articleID = getIntent().getStringExtra(Constants.ARTICLE_ID);
+        //
+        setTitle(String.format(titleFormat, ApplicationCache.publication.toString(), ApplicationCache.edition.toString()));
+        getSupportActionBar().setSubtitle(getIntent().getStringExtra(Constants.ARTICLE_TITLE));
         // Check if the article is available on disk
         final String articleFileName = getArticleFileName(ApplicationCache.curSel);
         if (FileUtils.fileExists(getApplicationContext(), articleFileName)) {
@@ -61,9 +67,19 @@ public class DisplayArticleActivity extends AppCompatActivity implements Respons
             GetArticleContent request = new GetArticleContent(articleUrl, this, this);
             volley.getRequestQueue().add(request);
         }
+        //
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void readArticleFileFromDisk(String fileName) {
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // Only one menu item - so no check required
+        finish();
+        return super.onOptionsItemSelected(item);
+    }
+
+    protected void readArticleFileFromDisk(String fileName) {
         final String articleText = FileUtils.readStringFromFile(getApplicationContext(), fileName);
         // Call the onReasponse from UI thread
         new Handler(Looper.getMainLooper()).post(new Runnable() {

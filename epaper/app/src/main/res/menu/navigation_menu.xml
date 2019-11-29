@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item android:id="@+id/deleteContent"
-        android:icon="@drawable/ic_menu_delete"
+    <item android:icon="@drawable/ic_menu_delete"
         android:onClick="handleDelete"
         android:title="@string/delete_content" />
 

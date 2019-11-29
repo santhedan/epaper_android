@@ -36,7 +36,7 @@ public class ArticleAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Article article = articles.get(position);
-        holder.itemView.setTag("Article@"+ article.getArticleURL() + "@" + article.getId());
+        holder.itemView.setTag("Article@"+ article.getArticleURL() + "@" + article.getId() + "@" + article.getTitle());
         holder.itemView.setOnClickListener(listener);
         ArticleHolder articleHolder = (ArticleHolder) holder;
         articleHolder.articleTitle.setText(article.getTitle());

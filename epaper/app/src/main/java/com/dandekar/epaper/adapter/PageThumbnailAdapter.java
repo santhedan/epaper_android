@@ -1,5 +1,6 @@
 package com.dandekar.epaper.adapter;
 
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,7 +71,6 @@ public class PageThumbnailAdapter extends RecyclerView.Adapter {
             if (existingTag != null) {
                 this.itemsDisplayed.remove(existingTag);
             }
-            Log.d(Constants.TAG, "The existing tag is : " + existingTag);
             ((PageNameHolder)holder).pageName.setText(pages.get(position).getName());
             String newTag = PAGE + position;
             this.itemsDisplayed.put(newTag, newTag);
@@ -81,7 +81,6 @@ public class PageThumbnailAdapter extends RecyclerView.Adapter {
             if (existingTag != null) {
                 this.itemsDisplayed.remove(existingTag);
             }
-            Log.d(Constants.TAG, "The existing tag is : " + existingTag);
             ((ThumbnailHolder)holder).pageThumbnail.setImageBitmap(pages.get(position).getThumbnail());
             String newTag = PAGE + position;
             this.itemsDisplayed.put(newTag, newTag);
@@ -90,7 +89,6 @@ public class PageThumbnailAdapter extends RecyclerView.Adapter {
             ((ThumbnailHolder)holder).pageName.setText(pageName);
             ((ThumbnailHolder)holder).pageThumbnail.setOnClickListener(listener);
         }
-        Log.d(Constants.TAG, this.itemsDisplayed.toString());
     }
 
     @Override

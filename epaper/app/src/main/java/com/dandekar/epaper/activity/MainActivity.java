@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.dandekar.epaper.R;
 import com.dandekar.epaper.activity.ui.login.LoginActivity;
@@ -19,16 +22,34 @@ import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private DrawerLayout drawerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(R.string.selectpublication);
         setContentView(R.layout.activity_publication_list);
         //
+        drawerLayout = findViewById(R.id.drawer_layout);
+        //
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         TextView email = headerView.findViewById(R.id.email_address);
         email.setText(ApplicationCache.userName);
+        //
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Log.d(Constants.TAG, "Item clicked -> " + item.getItemId());
+        if (drawerLayout.isDrawerOpen(Gravity.START)) {
+            drawerLayout.closeDrawer(Gravity.START);
+        } else {
+            drawerLayout.openDrawer(Gravity.START);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void launch_toi_home(View view) {
@@ -44,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void handleLogout(View view) {
-        Log.d(Constants.TAG, "Handle Logout");
         Thread t = new Thread() {
             @Override
             public void run() {
@@ -55,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void handleDelete(MenuItem item) {
-        Log.d(Constants.TAG, "Handle Delete");
     }
 
     private void showCity(Publication publication) {
@@ -68,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void deletePreference() {
+    protected void deletePreference() {
         //
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF_NAME, MODE_PRIVATE); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();

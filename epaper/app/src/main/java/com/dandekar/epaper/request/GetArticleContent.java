@@ -47,7 +47,6 @@ public final class GetArticleContent extends StringRequest {
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         final Map<String, String> headers = new HashMap<String, String>();
-        Log.d(Constants.TAG, "Cookie being sent -> " + ApplicationCache.cookie);
         headers.put("Cookie", ApplicationCache.cookie);
         headers.put(USER_AGENT, UA_VALUE);
         return headers;
@@ -63,7 +62,6 @@ public final class GetArticleContent extends StringRequest {
             articleContent = getImageEmbeddedArticleContent(articleContent, searchTag3, searchTag1, imageURL);
         }
         //
-        Log.d(Constants.TAG, "articleContent -> " + articleContent);
         return Response.success(articleContent, null);
     }
 
@@ -80,8 +78,6 @@ public final class GetArticleContent extends StringRequest {
             href = href.replace("/", "%2F");
             String url = String.format(formatURL, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), href, imageID, curSel.getRandom());
             String formattedImageTag = getImageDataTag(url);
-            //
-            Log.d(Constants.TAG, "formattedImageTag -> " + formattedImageTag);
             //
             articleContent = articleContent.replaceFirst(replaceTag3, formattedImageTag);
             //

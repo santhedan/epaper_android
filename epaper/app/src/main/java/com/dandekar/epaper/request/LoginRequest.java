@@ -53,7 +53,6 @@ public class LoginRequest extends StringRequest {
 
     @Override
     protected Map<String, String> getParams() throws AuthFailureError {
-        Log.d(Constants.TAG, "valueSynchronizeToken -> " + synchronizeToken);
         final Map<String, String> bodyArgs = new HashMap<>();
         bodyArgs.put(keyEmail, email);
         bodyArgs.put(keyPassword, password);
@@ -74,11 +73,7 @@ public class LoginRequest extends StringRequest {
 
     @Override
     protected Response<String> parseNetworkResponse(NetworkResponse response) {
-        for (Header header: response.allHeaders) {
-            Log.d(Constants.TAG,header.toString());
-        }
         String rawResponse = new String(response.data);
-        Log.d(Constants.TAG, "Response -> " + rawResponse);
         // Does the response contain what we are looking for?
         if (rawResponse.contains(stringToFind)) {
             // Yes it does, Find the index
@@ -90,7 +85,6 @@ public class LoginRequest extends StringRequest {
             // Now get the content
             String plenigoUser = rawResponse.substring(index, nextIndex);
             plenigoUser = PLENIGO_USER + plenigoUser + postfix;
-            Log.d(Constants.TAG, "plenigoUser -> " + plenigoUser);
             return Response.success(plenigoUser,null);
         } else {
             return Response.error(new VolleyError("User login failed"));

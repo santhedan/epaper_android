@@ -5,9 +5,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="article_cell_padding">5dp</dimen>
-    <dimen name="article_cell_divider_height">1dp</dimen>
     <dimen name="article_spacing_between_text">2dp</dimen>
     <dimen name="nav_header_height">275dp</dimen>
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="cell_divider_height">6dp</dimen>
+    <dimen name="cell_divider_width">6dp</dimen>
 </resources>

@@ -37,7 +37,6 @@ public final class BitmapRequest extends Request<BitmapHolder> {
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         final Map<String, String> headers = new HashMap<String, String>();
-        Log.d(Constants.TAG, "Cookie being sent -> " + this.cookie);
         headers.put("Cookie", this.cookie);
         headers.put(USER_AGENT, UA_VALUE);
         return headers;

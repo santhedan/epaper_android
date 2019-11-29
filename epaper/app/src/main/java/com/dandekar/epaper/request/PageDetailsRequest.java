@@ -23,14 +23,12 @@ public final class PageDetailsRequest extends StringRequest {
 
     public PageDetailsRequest(String url, String cookies, Response.Listener<String> listener, @Nullable Response.ErrorListener errorListener) {
         super(Method.GET, url, listener, errorListener);
-        Log.d(Constants.TAG, "URL -> " + url);
         this.cookie = cookies;
     }
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         final Map<String, String> headers = new HashMap<String, String>();
-        Log.d(Constants.TAG, "Cookie being sent -> " + this.cookie);
         headers.put("Cookie", this.cookie);
         headers.put(USER_AGENT, UA_VALUE);
         return headers;
@@ -39,18 +37,9 @@ public final class PageDetailsRequest extends StringRequest {
     @Override
     protected Response<String> parseNetworkResponse(NetworkResponse response) {
         for (Header header: response.allHeaders) {
-            Log.d(Constants.TAG,header.toString());
         }
         String rawResponse = new String(response.data);
-        Log.d(Constants.TAG, "Response -> " + rawResponse);
         return super.parseNetworkResponse(response);
     }
 
-    @Override
-    public void deliverError(VolleyError error) {
-        for (Header header: error.networkResponse.allHeaders) {
-            Log.d(Constants.TAG, header.toString());
-        }
-        super.deliverError(error);
-    }
 }

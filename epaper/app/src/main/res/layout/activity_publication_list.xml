@@ -8,10 +8,9 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:orientation="vertical">
+    <LinearLayout android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
 
         <ImageButton
             android:layout_width="match_parent"
@@ -20,7 +19,6 @@
             android:padding="@dimen/main_padding"
             android:background="@android:color/white"
             android:contentDescription="@string/thetimesofindia"
-            android:id="@+id/toibutton"
             android:src="@drawable/toi"
             android:scaleType="fitCenter"
             android:onClick="launch_toi_home"/>
@@ -37,7 +35,6 @@
             android:padding="@dimen/main_padding"
             android:background="@android:color/white"
             android:contentDescription="@string/theeconomictimes"
-            android:id="@+id/etbutton"
             android:src="@drawable/et"
             android:scaleType="fitCenter"
             android:onClick="launch_et_home"/>
@@ -54,7 +51,6 @@
             android:padding="@dimen/main_padding"
             android:background="@android:color/white"
             android:contentDescription="@string/mirror"
-            android:id="@+id/mirrorbutton"
             android:src="@drawable/mirror"
             android:scaleType="fitCenter"
             android:onClick="launch_mirror_home"/>

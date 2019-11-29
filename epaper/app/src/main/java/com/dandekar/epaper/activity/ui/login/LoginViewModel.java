@@ -101,15 +101,12 @@ public class LoginViewModel extends ViewModel implements Response.ErrorListener,
         } else if (currentReqType == RequestType.AfterLogin) {
             StringBuilder cookieValue = new StringBuilder();
             for (Header header : error.networkResponse.allHeaders) {
-                Log.d(Constants.TAG, header.toString());
                 if (SET_COOKIE.equals(header.getName())) {
                     cookieValue.append(header.getValue().split(DELIMITER)[0]);
-                    Log.d(Constants.TAG, cookieValue.toString());
                     cookieValue.append(DELIMITER);
                 }
             }
             toiAuth = cookieValue.toString();
-            Log.d(Constants.TAG, "TOIAuth -> " + toiAuth);
             //
             loginResult.setValue(new LoginResult(new LoggedInUserView(plenigoUser, toiPlenigoId, toiAuth)));
         } else {
@@ -134,7 +131,6 @@ public class LoginViewModel extends ViewModel implements Response.ErrorListener,
             // Get the response
             AccessDetails details = (AccessDetails) response;
             // Log the response
-            Log.d(Constants.TAG, "AccessDetails -> " + response.toString());
             toiPlenigoId = details.getCookie();
             // Now invoke the AfterLogin request
             currentReqType = RequestType.AfterLogin;
@@ -143,7 +139,6 @@ public class LoginViewModel extends ViewModel implements Response.ErrorListener,
         } else if (currentReqType == RequestType.AfterLogin) {
             // Get the response
             toiAuth = response.toString();
-            Log.d(Constants.TAG, "TOIAuth -> " + response.toString());
             //
             loginResult.setValue(new LoginResult(new LoggedInUserView(plenigoUser, toiPlenigoId, toiAuth)));
         } else {

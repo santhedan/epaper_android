@@ -1,4 +1,4 @@
-package com.dandekar.epaper.divider;
+package com.dandekar.epaper.decoration;
 
 import android.content.res.Resources;
 import android.graphics.Canvas;

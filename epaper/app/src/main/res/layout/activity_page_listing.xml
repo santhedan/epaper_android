@@ -16,10 +16,10 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:visibility="gone"/>
 
-    <ImageView
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/divider" />
+        android:layout_height="1dp"
+        android:background="@color/lightGray"/>
 
     <TextView
         android:id="@+id/messageText"
@@ -31,10 +31,10 @@
         android:padding="5dp"
         android:visibility="gone"/>
 
-    <ImageView
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/divider" />
+        android:layout_height="1dp"
+        android:background="@color/lightGray"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pageArticles"

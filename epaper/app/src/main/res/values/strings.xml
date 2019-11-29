@@ -10,7 +10,6 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password can not be empty</string>
     <string name="login_failed">Login failed</string>
@@ -21,5 +20,4 @@
     <string name="register">Register</string>
     <string name="message">Please enter your credentials to access ePaper. Click REGISTER to create new account.</string>
     <string name="delete_content">Delete Content</string>
-    <string name="sign_out">Sign Out</string>
 </resources>

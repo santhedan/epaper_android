@@ -3,7 +3,6 @@
     android:layout_width="203dp"
     android:layout_height="319dp"
     android:orientation="vertical"
-    android:background="@android:color/holo_blue_light"
     android:gravity="center">
 
     <TextView

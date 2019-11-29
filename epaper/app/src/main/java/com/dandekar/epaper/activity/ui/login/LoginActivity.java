@@ -32,8 +32,8 @@ import com.dandekar.epaper.util.VolleySingleton;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private LoginViewModel loginViewModel;
-    private Button loginButton;
+    protected LoginViewModel loginViewModel;
+    protected Button loginButton;
     private Button registerButton;
 
     @Override
@@ -146,19 +146,18 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void saveCookie(LoginResult loginResult, String userName) {
+    protected void saveCookie(LoginResult loginResult, String userName) {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF_NAME, MODE_PRIVATE); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
         String value = loginResult.getSuccess().getPlenigoUser() + "; " + loginResult.getSuccess().getToiAuth() + loginResult.getSuccess().getToiPlenigoId();
-        Log.d(Constants.TAG, "Storing cookie -> " + value);
         editor.putString(Constants.COOKIE_KEY, value);
-        Log.d(Constants.TAG, "Storing username -> " + userName);
         editor.putString(Constants.USERNAME_KEY, userName);
         ApplicationCache.cookie = value;
+        ApplicationCache.userName = userName;
         editor.commit();
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
+    protected void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 

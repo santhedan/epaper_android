@@ -41,10 +41,8 @@ public final class GetAccess extends GsonRequest<AccessDetails> {
         Response<AccessDetails> details = null;
         try {
             for (Header header : response.allHeaders) {
-                Log.d(Constants.TAG, header.toString());
                 if (SET_COOKIE.equals(header.getName())) {
                     cookieValue = header.getValue().split(DELIMITER)[0];
-                    Log.d(Constants.TAG, cookieValue);
                 }
             }
             details = super.parseNetworkResponse(response);

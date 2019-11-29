@@ -35,14 +35,12 @@ public class PageDetailsJSONRequest extends GsonRequest<Publication> {
      */
     public PageDetailsJSONRequest(String url, String cookies, Response.Listener<Publication> listener, Response.ErrorListener errorListener) {
         super(url, Publication.class, null, listener, errorListener);
-        Log.d(Constants.TAG, "URL -> " + url);
         this.cookie = cookies;
     }
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         final Map<String, String> headers = new HashMap<String, String>();
-        Log.d(Constants.TAG, "Cookie being sent -> " + this.cookie);
         headers.put("Cookie", this.cookie);
         headers.put(USER_AGENT, UA_VALUE);
         return headers;
@@ -71,11 +69,6 @@ public class PageDetailsJSONRequest extends GsonRequest<Publication> {
                 }
             }
             //
-            int counter = 1;
-            for (String secName: pages) {
-                Log.d(Constants.TAG, counter + " -> " + secName);
-                counter++;
-            }
             publication.setPageNames(pages);
         }
         //
@@ -88,7 +81,6 @@ public class PageDetailsJSONRequest extends GsonRequest<Publication> {
                 List<Article> articles = new ArrayList<>();
                 for (PageItem pageItem : page.getEn()) {
                     if (isArticle(pageItem, pages[position])) {
-                      Log.d(Constants.TAG, "Real article -> " + pageItem.toString());
                       String articleURL = String.format(ApplicationCache.articleURL, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), pageItem.getId(), curSel.getRandom());
                       List<MetaInfo> metaInfo = (pageItem.getMeta() == null? new ArrayList<MetaInfo>(): pageItem.getMeta());
                       String articleSN = "";
@@ -106,9 +98,6 @@ public class PageDetailsJSONRequest extends GsonRequest<Publication> {
                 //
                 position++;
             }
-        }
-        for (com.dandekar.epaper.data.displaymodel.Page p : displayPages) {
-            Log.d(Constants.TAG, p.toString());
         }
         publication.setDisplayPages(displayPages);
         //

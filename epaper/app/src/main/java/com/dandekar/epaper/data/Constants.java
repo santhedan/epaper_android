@@ -17,6 +17,7 @@ public abstract class Constants {
     public static final String ArticleFileNameFormat = "ART_%s_%d_%d_%d_%s.html";
     // SHORT_PATH + YEAR + MONTH + DAY
     public static final String PublicationFileNameFormat = "PUB_%s_%d_%d_%d.pub";
+    public static final String ARTICLE_TITLE = "ARTICLE_TITLE";
 
     public static String ARTICLE_ID ="ARTICLE_ID";
 }

@@ -6,11 +6,12 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,8 +26,9 @@ import com.dandekar.epaper.data.CurrentSelection;
 import com.dandekar.epaper.data.displaymodel.Article;
 import com.dandekar.epaper.data.displaymodel.Page;
 import com.dandekar.epaper.data.toimodel.Publication;
-import com.dandekar.epaper.divider.GrayDividerDecoration;
-import com.dandekar.epaper.divider.GrayVerticalDividerDecoration;
+import com.dandekar.epaper.decoration.GrayDividerDecoration;
+import com.dandekar.epaper.decoration.GrayVerticalDividerDecoration;
+import com.dandekar.epaper.decoration.ThumbnailDecoration;
 import com.dandekar.epaper.request.BitmapRequest;
 import com.dandekar.epaper.request.PageDetailsJSONRequest;
 import com.dandekar.epaper.util.ApplicationCache;
@@ -47,7 +49,8 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
     private TextView messageText;
 
     private String titleFormat = "%s - %s";
-    private Publication publication;
+    private String subtitleFormat = "%02d-%02d-%d";
+    protected Publication publication;
 
     private static final String REQ_TAG = "PageListingRequest";
     private static final String pageNameFormat = "%s (%d)";
@@ -60,7 +63,7 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
 
     private VolleySingleton volley;
 
-    private RequestType requestType;
+    protected RequestType requestType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +105,18 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
         }
         //
         progressbar.setVisibility(View.VISIBLE);
+        //
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //
+        getSupportActionBar().setSubtitle(String.format(subtitleFormat, ApplicationCache.curSel.getDay(), ApplicationCache.curSel.getMonth(), ApplicationCache.curSel.getYear()));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // Only one menu item - so no check required
+        finish();
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -147,7 +162,6 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
                 break;
             case Thumbnail:
                 final BitmapHolder holder = (BitmapHolder) response;
-                Log.d(Constants.TAG, "Got reqponse -> " + holder.getIntTag());
                 this.publication.getDisplayPages().get(holder.getIntTag()).setThumbnail(holder.getBitmap());
                 adapter.notifyItemChanged(holder.getIntTag());
                 // Initiate save of bitmap data
@@ -173,7 +187,7 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
         return String.format(Constants.ThumbnailFileNameFormat, curSelTN.getShortPath(), curSelTN.getYear(), curSelTN.getMonth(), curSelTN.getDay(), pageNo);
     }
 
-    private void initiateTNDownload() {
+    protected void initiateTNDownload() {
         this.requestType = RequestType.Thumbnail;
         int counter = 0;
         for (final Page page : this.publication.getDisplayPages()) {
@@ -190,7 +204,6 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
                 };
                 t.start();
             } else {
-                Log.d(Constants.TAG, "Requesting TN -> " + page.getThumbnailURL());
                 BitmapRequest request = new BitmapRequest(page.getThumbnailURL(), counter, ApplicationCache.cookie, this, this);
                 request.setTag(REQ_TAG);
                 volley.getRequestQueue().add(request);
@@ -199,7 +212,7 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
         }
     }
 
-    private void readTNFromDisk(String tnFile, int pageNo) {
+    protected void readTNFromDisk(String tnFile, int pageNo) {
         // Read the file from disk
         byte[] thumbnailBytes = FileUtils.readBytesFromFile(getApplicationContext(), tnFile);
         // Convert the byte array to bitmap
@@ -218,7 +231,7 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
         });
     }
 
-    private void readPubFileFromDisk(String pubFileName) {
+    protected void readPubFileFromDisk(String pubFileName) {
         final Publication pub = (Publication) FileUtils.readObjectFromFile(getApplicationContext(), pubFileName);
         // Call the onReasponse from UI thread
         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -234,7 +247,6 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
     @Override
     public void onClick(View v) {
         String tag = (String) v.getTag();
-        Log.d(Constants.TAG, "Clicked -> " + tag);
         if (tag.startsWith("Page:")) {
             String pageNumber = tag.split(":")[1];
             int pageNoTemp = Integer.parseInt(pageNumber);
@@ -257,11 +269,14 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
             }
         } else {
             // Handle article click
-            String articleURL = tag.split("@")[1];
-            String articleID = tag.split("@")[2];
+            String[] splitTag = tag.split("@");
+            String articleURL = splitTag[1];
+            String articleID = splitTag[2];
+            String articleTitle = splitTag[3];
             Intent intent = new Intent(this, DisplayArticleActivity.class);
             intent.putExtra(Constants.ARTICLE_URL, articleURL);
             intent.putExtra(Constants.ARTICLE_ID, articleID);
+            intent.putExtra(Constants.ARTICLE_TITLE, articleTitle);
             startActivity(intent);
         }
     }

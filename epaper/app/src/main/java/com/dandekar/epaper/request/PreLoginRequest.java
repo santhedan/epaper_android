@@ -23,11 +23,7 @@ public final class PreLoginRequest extends StringRequest {
 
     @Override
     protected Response<String> parseNetworkResponse(NetworkResponse response) {
-        for (Header header: response.allHeaders) {
-            Log.d(Constants.TAG,header.toString());
-        }
         String rawResponse = new String(response.data);
-        Log.d(Constants.TAG, "Response -> " + rawResponse);
         // Does the response contain what we are looking for?
         if (rawResponse.contains(stringToFind)) {
             // Yes it does, Find the index
@@ -36,7 +32,6 @@ public final class PreLoginRequest extends StringRequest {
             index = index + stringToFind.length();
             // Get 36 chars from the index (length of UUID in String format)
             String synchronizeToken = rawResponse.substring(index, index + 36);
-            Log.d(Constants.TAG, "synchronizeToken -> " + synchronizeToken);
             return Response.success(synchronizeToken,null);
         } else {
             return Response.error(new VolleyError("Token not found"));

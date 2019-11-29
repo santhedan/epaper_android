@@ -32,13 +32,12 @@ public class Splash extends AppCompatActivity {
         t.start();
     }
 
-    private void readPreference() {
+    protected void readPreference() {
         final Class clazz;
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF_NAME, MODE_PRIVATE);
         String cookie = pref.getString(Constants.COOKIE_KEY, "");
         //Pause for a while
         pauseApp();
-        Log.d(Constants.TAG,"Cookie ->" + cookie);
         if (!cookie.isEmpty()) {
             String userName = pref.getString(Constants.USERNAME_KEY, "");
             // Set the cookie in the app cache
@@ -61,7 +60,7 @@ public class Splash extends AppCompatActivity {
         uiHandler.post(runnable);
     }
 
-    private void launchActivity(Class clazz) {
+    protected void launchActivity(Class clazz) {
         Intent intent = new Intent(getApplicationContext(), clazz);
         startActivity(intent);
         finish();
