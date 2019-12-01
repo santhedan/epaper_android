@@ -1,7 +1,5 @@
 package com.dandekar.epaper.adapter;
 
-import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dandekar.epaper.R;
-import com.dandekar.epaper.data.Constants;
 import com.dandekar.epaper.data.Publication;
 import com.dandekar.epaper.data.displaymodel.Page;
 import com.dandekar.epaper.holder.PageNameHolder;
@@ -27,13 +24,15 @@ public class PageThumbnailAdapter extends RecyclerView.Adapter {
     public static final String PAGE = "Page:";
     private List<Page> pages;
     private View.OnClickListener listener;
+    private View.OnLongClickListener longlistener;
     private static final String pageNameFormat = "%s (%d)";
 
     Map<String, String> itemsDisplayed;
 
-    public PageThumbnailAdapter(List<Page> pages, View.OnClickListener listener) {
+    public PageThumbnailAdapter(List<Page> pages, View.OnClickListener listener, View.OnLongClickListener longlistener) {
         this.pages = pages;
         this.listener = listener;
+        this.longlistener = longlistener;
         this.itemsDisplayed = new ConcurrentHashMap<>();
     }
 
@@ -88,6 +87,7 @@ public class PageThumbnailAdapter extends RecyclerView.Adapter {
             String pageName = String.format(pageNameFormat, pages.get(position).getName(), position+1);
             ((ThumbnailHolder)holder).pageName.setText(pageName);
             ((ThumbnailHolder)holder).pageThumbnail.setOnClickListener(listener);
+            ((ThumbnailHolder)holder).pageThumbnail.setOnLongClickListener(longlistener);
         }
     }
 

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -28,7 +29,6 @@ import com.dandekar.epaper.data.displaymodel.Page;
 import com.dandekar.epaper.data.toimodel.Publication;
 import com.dandekar.epaper.decoration.GrayDividerDecoration;
 import com.dandekar.epaper.decoration.GrayVerticalDividerDecoration;
-import com.dandekar.epaper.decoration.ThumbnailDecoration;
 import com.dandekar.epaper.request.BitmapRequest;
 import com.dandekar.epaper.request.PageDetailsJSONRequest;
 import com.dandekar.epaper.util.ApplicationCache;
@@ -37,7 +37,7 @@ import com.dandekar.epaper.util.VolleySingleton;
 
 import java.util.List;
 
-public class PageListing extends AppCompatActivity implements Response.ErrorListener, Response.Listener, View.OnClickListener {
+public class PageListing extends AppCompatActivity implements Response.ErrorListener, Response.Listener, View.OnClickListener, View.OnLongClickListener {
 
     private ProgressBar progressbar;
     private TextView tvPlsWait;
@@ -56,6 +56,17 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
     private static final String pageNameFormat = "%s (%d)";
     private int pageNo = -1;
 
+    @Override
+    public boolean onLongClick(View v) {
+        String pageNo = v.getTag().toString().split(":")[1];
+        int pageNum = Integer.parseInt(pageNo) + 1;
+        pageNo = Integer.toString(pageNum);
+        Intent intent = new Intent(this, PageImageDisplayActivity.class);
+        intent.putExtra(Constants.PAGE_NUMBER, pageNo);
+        startActivity(intent);
+        return false;
+    }
+
     private enum RequestType {
         Publication,
         Thumbnail
@@ -72,6 +83,7 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
         //
         recyclerView = findViewById(R.id.pageThumbnails);
         articleRecyclerView = findViewById(R.id.pageArticles);
+        //
         //
         recyclerView.addItemDecoration(new GrayVerticalDividerDecoration(getResources()));
         articleRecyclerView.addItemDecoration(new GrayDividerDecoration(getResources()));
@@ -133,7 +145,7 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
                 progressbar.setVisibility(View.GONE);
                 tvPlsWait.setVisibility(View.GONE);
                 //
-                adapter = new PageThumbnailAdapter(this.publication.getDisplayPages(), this);
+                adapter = new PageThumbnailAdapter(this.publication.getDisplayPages(), this, this);
                 recyclerView.setAdapter(adapter);
                 //
                 recyclerView.setVisibility(View.VISIBLE);
@@ -247,6 +259,7 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
     @Override
     public void onClick(View v) {
         String tag = (String) v.getTag();
+        Log.d(Constants.TAG, "View tag -> " + tag);
         if (tag.startsWith("Page:")) {
             String pageNumber = tag.split(":")[1];
             int pageNoTemp = Integer.parseInt(pageNumber);
