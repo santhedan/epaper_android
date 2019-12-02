@@ -2,6 +2,8 @@ package com.dandekar.epaper.activity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -137,10 +139,25 @@ public class PageImageDisplayActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.next_prev_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        // Only one menu item - so no check required
-        finish();
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_next:
+            case R.id.action_previous:
+            {
+                return true;
+            }
+            default: {
+                finish();
+                return super.onOptionsItemSelected(item);
+            }
+        }
     }
 
 }

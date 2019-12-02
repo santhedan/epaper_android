@@ -20,4 +20,6 @@
     <string name="register">Register</string>
     <string name="message">Please enter your credentials to access ePaper. Click REGISTER to create new account.</string>
     <string name="delete_content">Delete Content</string>
+    <string name="previous_page">Previous Page</string>
+    <string name="next_page">Next Page</string>
 </resources>
