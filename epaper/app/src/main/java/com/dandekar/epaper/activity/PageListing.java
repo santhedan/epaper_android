@@ -61,7 +61,9 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
         String pageNo = v.getTag().toString().split(":")[1];
         int pageNum = Integer.parseInt(pageNo) + 1;
         pageNo = Integer.toString(pageNum);
+        String pageName = String.format(pageNameFormat, publication.getPageNames()[pageNum - 1], pageNum);
         Intent intent = new Intent(this, PageImageDisplayActivity.class);
+        intent.putExtra(Constants.PAGE_NAME, pageName);
         intent.putExtra(Constants.PAGE_NUMBER, pageNo);
         startActivity(intent);
         return false;

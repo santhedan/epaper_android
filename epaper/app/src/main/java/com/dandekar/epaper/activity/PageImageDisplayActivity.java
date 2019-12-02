@@ -24,7 +24,7 @@ import okhttp3.Response;
 public class PageImageDisplayActivity extends AppCompatActivity {
 
     private static String htmlContent = "<html>\n" +
-            "<head>\n" +
+            "<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n" +
             "<style>\n" +
             "img {\n" +
             "  position: absolute;\n" +
@@ -52,6 +52,13 @@ public class PageImageDisplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_page_image_display);
         pageImageDisplay = findViewById(R.id.pageImageDisplay);
+        pageImageDisplay.getSettings().setLoadWithOverviewMode(true);
+        pageImageDisplay.getSettings().setUseWideViewPort(true);
+        pageImageDisplay.getSettings().setSupportZoom(true);
+        pageImageDisplay.getSettings().setBuiltInZoomControls(true);
+        pageImageDisplay.getSettings().setDisplayZoomControls(false);
+        pageImageDisplay.setVerticalScrollBarEnabled(true);
+        pageImageDisplay.setHorizontalScrollBarEnabled(true);
         //
         pageImageDisplay.setWebViewClient(new WebViewClient() {
             @Override
@@ -102,6 +109,8 @@ public class PageImageDisplayActivity extends AppCompatActivity {
         });
         // Get page number
         String pageNo = getIntent().getStringExtra(Constants.PAGE_NUMBER);
+        String pageName = getIntent().getStringExtra(Constants.PAGE_NAME);
+        getSupportActionBar().setSubtitle(pageName);
         //
         CurrentSelection curSel = ApplicationCache.curSel;
         // Get the image URL

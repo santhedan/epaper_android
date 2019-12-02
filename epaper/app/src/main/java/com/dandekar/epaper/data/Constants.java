@@ -19,6 +19,7 @@ public abstract class Constants {
     public static final String PublicationFileNameFormat = "PUB_%s_%d_%d_%d.pub";
     public static final String ARTICLE_TITLE = "ARTICLE_TITLE";
     public static final String PAGE_NUMBER = "PAGE_NUMBER";
+    public static final String PAGE_NAME = "PAGE_NAME";
 
     public static String ARTICLE_ID ="ARTICLE_ID";
 
