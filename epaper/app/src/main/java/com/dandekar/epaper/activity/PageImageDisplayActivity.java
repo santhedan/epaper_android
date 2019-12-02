@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dandekar.epaper.R;
 import com.dandekar.epaper.data.Constants;
 import com.dandekar.epaper.data.CurrentSelection;
+import com.dandekar.epaper.data.Publication;
 import com.dandekar.epaper.util.ApplicationCache;
 
 import okhttp3.OkHttpClient;
@@ -46,6 +47,9 @@ public class PageImageDisplayActivity extends AppCompatActivity {
             "</html>";
 
     private WebView pageImageDisplay;
+
+    private static int mirrorRes = 136;
+    private static int otherRes = 120;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,9 +117,17 @@ public class PageImageDisplayActivity extends AppCompatActivity {
         getSupportActionBar().setSubtitle(pageName);
         //
         CurrentSelection curSel = ApplicationCache.curSel;
-        // Get the image URL
-        String imageURL = String.format(Constants.FORMAT_URL_PICTURE, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), pageNo);
-        String textURL = String.format(Constants.FORMAT_URL_TEXT, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), pageNo);
+        String imageURL = "";
+        String textURL = "";
+        if (ApplicationCache.publication == Publication.Mirror) {
+            // Get the image URL
+            imageURL = String.format(Constants.FORMAT_URL_PICTURE, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), pageNo, mirrorRes);
+            textURL = String.format(Constants.FORMAT_URL_TEXT, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), pageNo, mirrorRes);
+        } else {
+            // Get the image URL
+            imageURL = String.format(Constants.FORMAT_URL_PICTURE, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), pageNo, otherRes);
+            textURL = String.format(Constants.FORMAT_URL_TEXT, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), pageNo, otherRes);
+        }
         //
         String htmlText = String.format(htmlContent, imageURL, textURL);
         pageImageDisplay.loadData(htmlText, "text/html", "UTF-8");

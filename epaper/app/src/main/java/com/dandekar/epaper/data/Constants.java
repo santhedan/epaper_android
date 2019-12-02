@@ -24,9 +24,9 @@ public abstract class Constants {
     public static String ARTICLE_ID ="ARTICLE_ID";
 
     //https://epaper.timesgroup.com/Olive/ODN/TimesOfIndia/get/TOIM-2019-12-01/image.ashx?href=TOIM%2F2019%2F12%2F01&page=44&kind=picture&res=120&ts=20191201011050
-    public static String FORMAT_URL_PICTURE = "https://epaper.timesgroup.com/Olive/ODN/%s/get/%s-%d-%02d-%02d/image.ashx?href=%s/%d/%02d/%02d&page=%s&kind=picture&res=120&ts=20191201011050";;
+    public static String FORMAT_URL_PICTURE = "https://epaper.timesgroup.com/Olive/ODN/%s/get/%s-%d-%02d-%02d/image.ashx?href=%s/%d/%02d/%02d&page=%s&kind=picture&res=%d&ts=20191201011050";;
 
     //https://epaper.timesgroup.com/Olive/ODN/TimesOfIndia/get/TOIM-2019-12-01/image.ashx?href=TOIM%2F2019%2F12%2F01&page=44&kind=text&res=120&ts=20191201011050
-    public static String FORMAT_URL_TEXT = "https://epaper.timesgroup.com/Olive/ODN/%s/get/%s-%d-%02d-%02d/image.ashx?href=%s/%d/%02d/%02d&page=%s&kind=text&res=120&ts=20191201011050";
+    public static String FORMAT_URL_TEXT = "https://epaper.timesgroup.com/Olive/ODN/%s/get/%s-%d-%02d-%02d/image.ashx?href=%s/%d/%02d/%02d&page=%s&kind=text&res=%d&ts=20191201011050";
 
 }
