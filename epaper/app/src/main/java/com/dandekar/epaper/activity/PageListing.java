@@ -58,13 +58,11 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
 
     @Override
     public boolean onLongClick(View v) {
-        String pageNo = v.getTag().toString().split(":")[1];
-        int pageNum = Integer.parseInt(pageNo) + 1;
-        pageNo = Integer.toString(pageNum);
-        String pageName = String.format(pageNameFormat, publication.getPageNames()[pageNum - 1], pageNum);
         Intent intent = new Intent(this, PageImageDisplayActivity.class);
-        intent.putExtra(Constants.PAGE_NAME, pageName);
-        intent.putExtra(Constants.PAGE_NUMBER, pageNo);
+        String pageNo = v.getTag().toString().split(":")[1];
+        intent.putExtra(Constants.PAGE_NUMBER, Integer.parseInt(pageNo));
+        intent.putExtra(Constants.PAGE_NAMES, this.publication.getPageNames());
+        intent.putExtra(Constants.PAGE_COUNT, this.publication.getDisplayPages().size());
         startActivity(intent);
         return false;
     }
@@ -127,6 +125,22 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
     }
 
     @Override
+    protected void onDestroy() {
+        recyclerView = null;
+        articleRecyclerView = null;
+        if (adapter != null) {
+            adapter.cleanup();
+        }
+        adapter = null;
+        articleAdapter = null;
+        if (publication != null) {
+            publication.cleanDisplayPage();
+        }
+        publication = null;
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Only one menu item - so no check required
         finish();
@@ -185,6 +199,7 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
                         @Override
                         public void run() {
                             FileUtils.writeBytesToFile(getApplicationContext(), holder.getBitmapData(), TNFileName);
+                            holder.resetBitmap();
                         }
                     };
                     tSaveTN.start();
@@ -233,7 +248,8 @@ public class PageListing extends AppCompatActivity implements Response.ErrorList
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inScaled = false;   // We want to get the original image not scaled image
         Bitmap bitmap = BitmapFactory.decodeByteArray(thumbnailBytes, 0, thumbnailBytes.length, opt);
-        final BitmapHolder holder = new BitmapHolder(pageNo, null, thumbnailBytes, bitmap);
+        thumbnailBytes = null;
+        final BitmapHolder holder = new BitmapHolder(pageNo, null, null, bitmap);
         // Call the onReasponse from UI thread
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override

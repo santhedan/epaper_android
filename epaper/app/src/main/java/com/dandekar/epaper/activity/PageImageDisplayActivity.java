@@ -52,6 +52,12 @@ public class PageImageDisplayActivity extends AppCompatActivity {
 
     private static int mirrorRes = 136;
     private static int otherRes = 120;
+    private int curPage;
+    private int totalPages;
+    private String[] pageNames;
+    //
+    private MenuItem previousMenu;
+    private MenuItem nextMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,43 +120,85 @@ public class PageImageDisplayActivity extends AppCompatActivity {
 
         });
         // Get page number
-        String pageNo = getIntent().getStringExtra(Constants.PAGE_NUMBER);
-        String pageName = getIntent().getStringExtra(Constants.PAGE_NAME);
-        getSupportActionBar().setSubtitle(pageName);
+        curPage = getIntent().getIntExtra(Constants.PAGE_NUMBER, -1);
+        totalPages = getIntent().getIntExtra(Constants.PAGE_COUNT, -1);
+        if (totalPages > 0) {
+            totalPages--;
+        }
+        pageNames = getIntent().getStringArrayExtra(Constants.PAGE_NAMES);
+        //
+        loadPage();
+        //
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void loadPage() {
+        getSupportActionBar().setSubtitle(pageNames[curPage]);
         //
         CurrentSelection curSel = ApplicationCache.curSel;
         String imageURL = "";
         String textURL = "";
         if (ApplicationCache.publication == Publication.Mirror) {
             // Get the image URL
-            imageURL = String.format(Constants.FORMAT_URL_PICTURE, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), pageNo, mirrorRes);
-            textURL = String.format(Constants.FORMAT_URL_TEXT, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), pageNo, mirrorRes);
+            imageURL = String.format(Constants.FORMAT_URL_PICTURE, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), Integer.valueOf(curPage + 1), mirrorRes);
+            textURL = String.format(Constants.FORMAT_URL_TEXT, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), Integer.valueOf(curPage + 1), mirrorRes);
         } else {
             // Get the image URL
-            imageURL = String.format(Constants.FORMAT_URL_PICTURE, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), pageNo, otherRes);
-            textURL = String.format(Constants.FORMAT_URL_TEXT, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), pageNo, otherRes);
+            imageURL = String.format(Constants.FORMAT_URL_PICTURE, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), Integer.valueOf(curPage + 1), otherRes);
+            textURL = String.format(Constants.FORMAT_URL_TEXT, curSel.getSkin(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), curSel.getShortPath(), curSel.getYear(), curSel.getMonth(), curSel.getDay(), Integer.valueOf(curPage + 1), otherRes);
         }
         //
         String htmlText = String.format(htmlContent, imageURL, textURL);
         pageImageDisplay.loadData(htmlText, "text/html", "UTF-8");
-        //
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_back);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.next_prev_menu, menu);
+        previousMenu = menu.getItem(0);
+        nextMenu = menu.getItem(1);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (curPage == totalPages) {
+            nextMenu.setEnabled(false);
+        }if (curPage == 0) {
+            previousMenu.setEnabled(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_next:
+            {
+                if (curPage < totalPages) {
+                    curPage++;
+                    loadPage();
+                }
+                if (curPage == totalPages) {
+                    nextMenu.setEnabled(false);
+                } else {
+                    nextMenu.setEnabled(true);
+                }
+                return true;
+            }
             case R.id.action_previous:
             {
+                if (curPage > 0) {
+                    curPage--;
+                    loadPage();
+                }
+                if (curPage == 0) {
+                    previousMenu.setEnabled(false);
+                } else {
+                    previousMenu.setEnabled(true);
+                }
                 return true;
             }
             default: {

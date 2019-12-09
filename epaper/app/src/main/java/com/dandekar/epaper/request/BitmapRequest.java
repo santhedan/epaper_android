@@ -32,6 +32,7 @@ public final class BitmapRequest extends Request<BitmapHolder> {
         this.listener = listener;
         this.tag = tag;
         this.cookie = cookie;
+        setShouldCache(false);
     }
 
     @Override

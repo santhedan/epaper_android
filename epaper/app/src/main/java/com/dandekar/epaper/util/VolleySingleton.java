@@ -18,7 +18,6 @@ public final class VolleySingleton {
 
     private static VolleySingleton mInstance = null;
     private RequestQueue mRequestQueue;
-    private ImageLoader mImageLoader;
 
     private VolleySingleton(Context context){
         HurlStack stack = new HurlStack() {
@@ -30,15 +29,6 @@ public final class VolleySingleton {
             }
         };
         mRequestQueue = Volley.newRequestQueue(context, stack);
-        mImageLoader = new ImageLoader(this.mRequestQueue, new ImageLoader.ImageCache() {
-            private final LruCache<String, Bitmap> mCache = new LruCache<String, Bitmap>(10);
-            public void putBitmap(String url, Bitmap bitmap) {
-                mCache.put(url, bitmap);
-            }
-            public Bitmap getBitmap(String url) {
-                return mCache.get(url);
-            }
-        });
     }
 
     public static synchronized VolleySingleton getInstance(Context context){
@@ -52,7 +42,4 @@ public final class VolleySingleton {
         return this.mRequestQueue;
     }
 
-    public ImageLoader getImageLoader(){
-        return this.mImageLoader;
-    }
 }

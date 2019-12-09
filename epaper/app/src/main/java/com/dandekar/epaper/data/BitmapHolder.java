@@ -16,6 +16,11 @@ public final class BitmapHolder {
         this.bitmap = bitmap;
     }
 
+    public void resetBitmap() {
+//        bitmapData = null;
+//        bitmap = null;
+    }
+
     public int getIntTag() {
         return intTag;
     }

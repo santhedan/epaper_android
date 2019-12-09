@@ -103,4 +103,13 @@ public class PageThumbnailAdapter extends RecyclerView.Adapter {
         }
         return 0;
     }
+
+    public void cleanup() {
+        if (pages != null) {
+            for (Page p: pages) {
+                p.cleanup();
+            }
+            pages.clear();
+        }
+    }
 }

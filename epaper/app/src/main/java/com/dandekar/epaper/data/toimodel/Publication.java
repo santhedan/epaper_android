@@ -57,6 +57,13 @@ public final class Publication implements Serializable {
         this.displayPages = displayPages;
     }
 
+    public void cleanDisplayPage() {
+//        for (com.dandekar.epaper.data.displaymodel.Page p: displayPages) {
+//            p.cleanup();
+//        }
+//        displayPages = null;
+    }
+
     public boolean isAips() {
         return aips;
     }

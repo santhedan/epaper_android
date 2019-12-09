@@ -50,6 +50,16 @@ public final class Page  implements Serializable {
         this.thumbnailURL = thumbnailURL;
     }
 
+    public void cleanup() {
+//        if (articles != null) {
+//            articles.clear();
+//        }
+//        if (thumbnail != null) {
+//            //thumbnail.recycle();
+//        }
+//        thumbnail = null;
+    }
+
     @Override
     public String toString() {
         return "Page{" +

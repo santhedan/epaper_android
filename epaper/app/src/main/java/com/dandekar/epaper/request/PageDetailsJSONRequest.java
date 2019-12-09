@@ -36,6 +36,7 @@ public class PageDetailsJSONRequest extends GsonRequest<Publication> {
     public PageDetailsJSONRequest(String url, String cookies, Response.Listener<Publication> listener, Response.ErrorListener errorListener) {
         super(url, Publication.class, null, listener, errorListener);
         this.cookie = cookies;
+        setShouldCache(false);
     }
 
     @Override
